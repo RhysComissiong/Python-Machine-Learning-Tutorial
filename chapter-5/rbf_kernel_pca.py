@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 
 from scipy.spatial.distance import pdist, squareform
@@ -25,8 +25,11 @@ def rbf_kernel_pca(X, gamma, n_components):
         
     Returns
     ---------
-    X_pc: {NumPy ndarray}, shape = [n_examples, k_features]
+    alphas: {NumPy ndarray}, shape = [n_examples, k_features]
         Projected dataset
+        
+    lambdas: list
+        Eigenvalues
         
     """
     # Calculate pairwise squared Euclidean distances
@@ -50,8 +53,10 @@ def rbf_kernel_pca(X, gamma, n_components):
     eigvals, eigvecs = eigvals[::-1], eigvecs[:, ::-1]
     
     # Collect the top k eigenvectors (projected examples)
-    X_pc = np.column_stack([eigvecs[:,i] for i in range(n_components)])
+    alphas = np.column_stack([eigvecs[:,i] for i in range(n_components)])
     
-    return X_pc
+    # Collect the corresponding eigenvalues
+    lambdas = [eigvals[i] for i in range(n_components)]
+    return alphas, lambdas
     
 
