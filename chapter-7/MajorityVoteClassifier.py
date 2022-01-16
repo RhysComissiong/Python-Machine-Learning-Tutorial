@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[3]:
 
 
 from sklearn.base import BaseEstimator
@@ -64,7 +64,7 @@ class MajorityVoteClassifier(BaseEstimator, ClassifierMixin):
         # Use LabelEncoder to ensure class labels start with 0, which is important for np.argmax call
         # in self.predict
         self.lablenc_ = LabelEncoder()
-        self.labelenc_.fit(y)
+        self.lablenc_.fit(y)
         self.classes_ = self.lablenc_.classes_
         self.classifiers_ = []
         for clf in self.classifiers:
@@ -100,35 +100,35 @@ class MajorityVoteClassifier(BaseEstimator, ClassifierMixin):
             maj_vote = self.lablenc_.inverse_transform(maj_vote)
             return maj_vote
         
-        def predict_proba(self, X):
-            """
-            Parameters
-            -----------
-            X : {array-like, sparse matrix}, shape = [n_examples, n_features]
-                Training vectors, where n_examples is the number of examples 
-                and n_features is the number of features.
-                
-            Returns
-            -----------
-            avg_proba : array-like, shape = [n_examples, n_classes]
-                Weighted average probability for each class per example.
-                
-            """
-            probas = np.asarray([clf.predict_proba(X) for clf in self.classifiers_])
-            avg_proba = np.average(probas, axis=0, weights=self.weights)
-            return avg_proba
-        
-        def get_params(self, deep=True):
-            """ Get classifier parameter names for GridSearch"""
-            if not deep:
-                return super(MajorityVoteClassifier, self).get_params(deep=False)
-            
-            else:
-                out = self.named_classifiers.copy()
-                for name, step in self.named_classifiers.items():
-                    for key, value in step.get_params(deep=True).items():
-                        out['%s__%s' % (name, key)] = valye
-                    return out
-        
+    def predict_proba(self, X):
+        """
+        Parameters
+        -----------
+        X : {array-like, sparse matrix}, shape = [n_examples, n_features]
+            Training vectors, where n_examples is the number of examples 
+            and n_features is the number of features.
+
+        Returns
+        -----------
+        avg_proba : array-like, shape = [n_examples, n_classes]
+            Weighted average probability for each class per example.
+
+        """
+        probas = np.asarray([clf.predict_proba(X) for clf in self.classifiers_])
+        avg_proba = np.average(probas, axis=0, weights=self.weights)
+        return avg_proba
+
+    def get_params(self, deep=True):
+        """ Get classifier parameter names for GridSearch"""
+        if not deep:
+            return super(MajorityVoteClassifier, self).get_params(deep=False)
+
+        else:
+            out = self.named_classifiers.copy()
+            for name, step in self.named_classifiers.items():
+                for key, value in step.get_params(deep=True).items():
+                    out['%s__%s' % (name, key)] = value
+                return out
+
     
 
